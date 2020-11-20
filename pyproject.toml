@@ -3,11 +3,21 @@ name = "post-publisher"
 version = "0.1.0"
 description = "A GitHub action to publish posts"
 authors = ["Kevin Marilleau <kevin.marilleau@gmail.com>"]
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
+requests = "^2.25.0"
 
 [tool.poetry.dev-dependencies]
+pytest = "^6.1.2"
+requests-cache = "^0.5.2"
+
+[tool.pytest.ini_options]
+testpaths = [
+  "src",
+  "tests",
+]
 
 [build-system]
 requires = ["poetry>=0.12"]
