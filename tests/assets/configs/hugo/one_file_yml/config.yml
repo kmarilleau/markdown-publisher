@@ -1,0 +1,23 @@
+---
+json:
+  - rigid
+  - better for data interchange
+yaml:
+  - slim and flexible
+  - better for configuration
+object:
+  key: value
+  name:
+    first: Goldie
+    last: Mcbride
+  array:
+    - boolean: true
+    - integer: 1
+paragraph: |
+  Blank lines denote
+  paragraph breaks
+content: |-
+  Or we
+  can auto
+  convert line breaks
+  to save space
