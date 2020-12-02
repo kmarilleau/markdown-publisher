@@ -57,11 +57,3 @@ class HugoConfigLoader(IConfigLoader):
             return config
         else:
             raise FileNotFoundError(f"No Hugo Configuration Found in {self._workdir}")
-
-
-# Translation by:
-# - filename
-# - content directory
-
-# [permalinks]
-#   posts = "/:year/:month/:title/"
