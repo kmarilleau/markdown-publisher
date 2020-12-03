@@ -5,7 +5,8 @@ from typing import Any, Dict, Final
 import toml
 import yaml
 from path import Path
-from src.utils.misc import list_to_nested_dicts, merge_nested_dicts
+
+from .utils.misc import list_to_nested_dicts, merge_nested_dicts
 
 
 class IConfigLoader(ABC):

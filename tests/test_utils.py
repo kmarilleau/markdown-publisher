@@ -1,6 +1,10 @@
 import pytest
-from src.utils.misc import (is_absolute_url, list_to_nested_dicts,
-                            merge_nested_dicts)
+
+from src.utils.misc import (
+    is_absolute_url,
+    list_to_nested_dicts,
+    merge_nested_dicts,
+)
 
 
 class TestIsUrl:
