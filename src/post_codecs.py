@@ -147,3 +147,21 @@ class PostCodec(IPostCodec):
             )
         except KeyError as e:
             raise PostDecodeError(f"'{e}' key is missing.")
+
+
+class HugoPostCodec(IPostCodec):
+    CONTENT_FORMATS = [
+        ContentFormats.MARKDOWN,
+    ]
+
+    def _get_post(self, metadata: Dict[str, Any], partial_dict: Dict[str, Any]) -> Post:
+        try:
+            return Post(
+                is_draft=metadata["is_draft"],
+                title=metadata["title"],
+                tags=metadata["tags"],
+                categories=metadata["categories"],
+                **partial_dict,
+            )
+        except KeyError as e:
+            raise PostDecodeError(f"'{e}' key is missing.")
