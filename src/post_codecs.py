@@ -1,20 +1,18 @@
 import json
-import re
 from abc import ABC, abstractmethod
 from enum import Enum, unique
 from glob import glob
 from json.decoder import JSONDecodeError
-from typing import Any, ClassVar, Dict, FrozenSet, List, Optional
-from uuid import UUID, uuid4
+from typing import Any, ClassVar, Dict, List, Optional
 
 import frontmatter
 from markdown import markdown
 from markdownify import markdownify
 from path import Path
-from pydantic import BaseModel, Field, HttpUrl
 from toml.decoder import TomlDecodeError
 from yaml.scanner import ScannerError
 
+from . import Post, PostPublisher
 
 
 class PostDecodeError(ValueError):
@@ -26,41 +24,6 @@ class ContentFormats(Enum):
     MARKDOWN = [
         ".md",
     ]
-
-
-class PostPublisher(BaseModel):
-    class Config:
-        extra = "forbid"
-
-    id: UUID = Field(default_factory=uuid4)
-
-
-class Post(BaseModel):
-    class Config:
-        extra = "forbid"
-
-    filepath: Path
-    post_publisher: PostPublisher
-
-    title: str
-    content: str
-
-    canonical_url: Optional[HttpUrl]
-
-    tags: FrozenSet[str]
-    categories: FrozenSet[str]
-
-    is_draft: bool
-
-    def __eq__(self, other: Any) -> bool:
-        if isinstance(other, BaseModel):
-            self_dict, other_dict = self.dict(), other.dict()
-            self_content = re.sub(r"\s+", "", self_dict.pop("content"))
-            other_content = re.sub(r"\s+", "", other_dict.pop("content"))
-
-            return self_dict == other_dict and self_content == other_content
-        else:
-            return self.dict() == other
 
 
 class IPostCodec(ABC):

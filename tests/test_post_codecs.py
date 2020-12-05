@@ -4,13 +4,8 @@ import frontmatter
 import pytest
 from path import Path
 
-from src.post_codecs import (
-    HugoPostCodec,
-    Post,
-    PostCodec,
-    PostDecodeError,
-    PostPublisher,
-)
+from src import Post, PostPublisher
+from src.post_codecs import HugoPostCodec, PostCodec, PostDecodeError
 
 
 @pytest.fixture
@@ -106,7 +101,9 @@ class TestPostCodec:
                 codec.dump(expected_post)
                 test_post = codec.load(filepath)
 
-                err_msg = f"Error with '{ext}' file extension: test_post != EXPECTED_POST\n"
+                err_msg = (
+                    f"Error with '{ext}' file extension: test_post != EXPECTED_POST\n"
+                )
                 for field_a, field_b in zip(test_post, expected_post):
                     err_msg += f"test_post.{field_a[0]} = {field_a[1]};"
                     err_msg += f" EXPECTED_POST.{field_b[0]} = {field_b[1]};\n"
@@ -267,7 +264,9 @@ class TestHugoPostCodec:
 
         codec.dump(expected_post)
 
-        file_frontmatter, content = frontmatter.parse(filepath.read_text(encoding="utf-8"))
+        file_frontmatter, content = frontmatter.parse(
+            filepath.read_text(encoding="utf-8")
+        )
         expected_json = json.loads(expected_post.json())
 
         assert file_frontmatter["is_draft"] == expected_json["is_draft"]
