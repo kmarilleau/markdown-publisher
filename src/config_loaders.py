@@ -11,7 +11,7 @@ from .utils.misc import list_to_nested_dicts, merge_nested_dicts
 
 class IConfigLoader(ABC):
     def __init__(self, workdir: Path):
-        self._workdir: Final = workdir
+        self._workdir: Final = workdir.abspath()
 
     @abstractmethod
     def load(self) -> Dict[str, Any]:

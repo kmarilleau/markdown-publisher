@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 
 from bs4 import BeautifulSoup
 from path import Path
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, validator
 
 
 class PostPublisher(BaseModel):
@@ -30,6 +30,13 @@ class Post(BaseModel):
     categories: FrozenSet[str]
 
     is_draft: bool
+
+    @validator("filepath", always=True)
+    @classmethod
+    def filepath_must_be_absolute(cls, filepath: Path):
+        if not filepath.isabs():
+            raise ValueError("must be an absolute path.")
+        return filepath
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Post):

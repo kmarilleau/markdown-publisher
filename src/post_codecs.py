@@ -57,7 +57,7 @@ class IPostCodec(ABC):
         return self._get_post(
             metadata,
             {
-                "filepath": filepath,
+                "filepath": filepath.abspath(),
                 "post_publisher": PostPublisher(**post_publisher),
                 "content": markdown(content),
             },
