@@ -9,27 +9,27 @@ from src.post_codecs import HugoPostCodec, PostCodec, PostDecodeError
 
 
 class TestPostCodec:
-    def test_dump_load_post(self, tmpdir, expected_post):
+    def test_dump_load_post(self, tmpdir, post):
         tmpdir = Path(tmpdir)
         postsdir = (tmpdir / "posts").mkdir()
         filepath = (postsdir / "test_post.md").touch()
-        expected_post.filepath = filepath
+        post = Post(filepath=filepath, **post.dict(exclude={"filepath"}))
 
         codec = PostCodec(postsdir=postsdir)
 
-        codec.dump(expected_post)
+        codec.dump(post)
 
         test_post = codec.load(filepath)
 
-        assert test_post == expected_post
+        assert test_post == post
         assert codec.is_post(filepath)
         assert codec.is_publishable(filepath)
 
-    def test_file_not_found(self, tmpdir, expected_post):
+    def test_file_not_found(self, tmpdir, post):
         tmpdir = Path(tmpdir)
         postsdir = (tmpdir / "posts").mkdir()
         filepath = postsdir / "test_post.md"
-        expected_post.filepath = filepath
+        post = Post(filepath=filepath, **post.dict(exclude={"filepath"}))
 
         codec = PostCodec(postsdir=postsdir)
 
@@ -37,16 +37,16 @@ class TestPostCodec:
         assert codec.is_publishable(filepath)
 
         with pytest.raises(FileNotFoundError):
-            codec.dump_app_data(expected_post)
+            codec.dump_app_data(post)
 
         with pytest.raises(FileNotFoundError):
             codec.load(filepath)
 
-    def test_file_is_as_directory(self, tmpdir, expected_post):
+    def test_file_is_as_directory(self, tmpdir, post):
         tmpdir = Path(tmpdir)
         postsdir = (tmpdir / "posts").mkdir()
         filepath = (postsdir / "test_post").mkdir()
-        expected_post.filepath = filepath
+        post = Post(filepath=filepath, **post.dict(exclude={"filepath"}))
 
         codec = PostCodec(postsdir=postsdir)
 
@@ -54,7 +54,7 @@ class TestPostCodec:
         assert codec.is_publishable(filepath)
 
         with pytest.raises(IsADirectoryError):
-            codec.dump_app_data(expected_post)
+            codec.dump_app_data(post)
 
         with pytest.raises(IsADirectoryError):
             codec.load(filepath)
@@ -74,7 +74,7 @@ class TestPostCodec:
         assert codec.is_publishable(file_publishable_1)
         assert codec.is_publishable(file_publishable_2)
 
-    def test_file_formats(self, tmpdir, expected_post):
+    def test_file_formats(self, tmpdir, post):
         tmpdir = Path(tmpdir)
         postsdir = (tmpdir / "posts").mkdir()
         codec = PostCodec(postsdir=postsdir)
@@ -82,19 +82,19 @@ class TestPostCodec:
         for content_format in codec.CONTENT_FORMATS:
             for ext in content_format.value:
                 filepath = postsdir / f"test_post{ext}"
-                expected_post.filepath = filepath
+                post = Post(filepath=filepath, **post.dict(exclude={"filepath"}))
 
-                codec.dump(expected_post)
+                codec.dump(post)
                 test_post = codec.load(filepath)
 
                 err_msg = (
                     f"Error with '{ext}' file extension: test_post != EXPECTED_POST\n"
                 )
-                for field_a, field_b in zip(test_post, expected_post):
+                for field_a, field_b in zip(test_post, post):
                     err_msg += f"test_post.{field_a[0]} = {field_a[1]};"
                     err_msg += f" EXPECTED_POST.{field_b[0]} = {field_b[1]};\n"
 
-                assert test_post == expected_post, err_msg
+                assert test_post == post, err_msg
                 assert codec.is_post(filepath)
                 assert codec.is_publishable(filepath)
 
@@ -240,20 +240,20 @@ is_draft = true
 
 
 class TestHugoPostCodec:
-    def test_post_fields_in_file(self, tmpdir, expected_post):
+    def test_post_fields_in_file(self, tmpdir, post):
         tmpdir = Path(tmpdir)
         postsdir = (tmpdir / "content").mkdir()
         filepath = (postsdir / "post.md").touch()
-        expected_post.filepath = filepath
+        post = Post(filepath=filepath, **post.dict(exclude={"filepath"}))
 
         codec = HugoPostCodec(postsdir=postsdir)
 
-        codec.dump(expected_post)
+        codec.dump(post)
 
         file_frontmatter, content = frontmatter.parse(
             filepath.read_text(encoding="utf-8")
         )
-        expected_json = json.loads(expected_post.json())
+        expected_json = json.loads(post.json())
 
         assert file_frontmatter["is_draft"] == expected_json["is_draft"]
         assert file_frontmatter["title"] == expected_json["title"]

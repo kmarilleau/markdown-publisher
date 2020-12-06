@@ -8,7 +8,7 @@ requests_cache.install_cache()
 
 
 @pytest.fixture
-def expected_post(scope="function"):
+def post(scope="function"):
     return Post(
         filepath=Path("/workdir/postsdir/post.md"),
         post_publisher=PostPublisher(),

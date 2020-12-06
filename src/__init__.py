@@ -16,6 +16,7 @@ class PostPublisher(BaseModel):
 class Post(BaseModel):
     class Config:
         extra = "forbid"
+        allow_mutation = False
 
     filepath: Path
     post_publisher: PostPublisher
@@ -31,7 +32,7 @@ class Post(BaseModel):
     is_draft: bool
 
     def __eq__(self, other: Any) -> bool:
-        if isinstance(other, BaseModel):
+        if isinstance(other, Post):
             return (
                 self.dict(exclude={"content"}) == other.dict(exclude={"content"})
                 and BeautifulSoup(self.content, "lxml").prettify()
